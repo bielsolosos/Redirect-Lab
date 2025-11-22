@@ -7,7 +7,7 @@ services:
     container_name: rdl-app
     restart: unless-stopped
     ports:
-      - "${PORT:-8080}:8090"
+      - "${PORT:-8080}:8080"
     environment:
       DB_URL: ${DB_URL}
       DB_USERNAME: ${DB_USERNAME}
