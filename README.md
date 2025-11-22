@@ -149,7 +149,7 @@ O projeto segue uma **arquitetura em camadas** (Layered Architecture) com separa
 
 #### 🎨 Melhorias de Interface (Fase 4)
 - [ ] Área de perfil do usuário
-- [ ] Temas customizáveis (light/dark/auto)
+- [ ] Temas customizáveis (winter/dark/auto)
 - [ ] Gráficos interativos de estatísticas
 - [ ] Preview de URL antes de redirecionar
 - [ ] Notificações em tempo real
