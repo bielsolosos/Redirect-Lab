@@ -37,3 +37,8 @@ spring:
   web:
     resources:
       add-mappings: false
+
+rdl:
+  jwt:
+    secret: ${JWT_SECRET:key_secreta_jwt}
+    expiration: ${JWT_EXPIRATION:3600000}   

@@ -21,7 +21,7 @@ import space.bielsolososdev.rdl.api.model.urlredirect.UrlRedirectResponse;
 import space.bielsolososdev.rdl.domain.url.service.UrlRedirectService;
 
 @RestController
-@RequestMapping("redirect")
+@RequestMapping("api/redirect")
 @RequiredArgsConstructor
 public class UrlRedirectOperationsController {
 
