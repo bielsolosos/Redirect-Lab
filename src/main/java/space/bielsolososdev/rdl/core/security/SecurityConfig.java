@@ -48,7 +48,8 @@ public class SecurityConfig {
     };
 
     private static final String[] WEB_AUTHENTICATED_ROUTES = {
-            "/urls/**"
+            "/urls/**",
+            "/profile/**"
     };
 
     /**
