@@ -1,604 +1,405 @@
-# 🔗 RDL - Redirect Lab
+# Redirect Lab (RDL)
 
-[![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.8-brightgreen.svg)](https://spring.io/projects/spring-boot)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue.svg)](https://www.postgresql.org/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.8-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Thymeleaf](https://img.shields.io/badge/Thymeleaf-3-005F0F?style=for-the-badge&logo=thymeleaf&logoColor=white)](https://www.thymeleaf.org/)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
-> **RDL (Redirect Lab)** é um encurtador de URLs moderno desenvolvido com Spring Boot 3 e Thymeleaf, focado em simplicidade, performance e uma interface elegante com DaisyUI. Aplicação full-stack pronta para uso direto e integração com APIs externas.
-
----
-
-## 📋 Índice
-
-- [Sobre o Projeto](#-sobre-o-projeto)
-- [Tecnologias](#-tecnologias)
-- [Arquitetura](#-arquitetura)
-- [Funcionalidades](#-funcionalidades)
-- [Pré-requisitos](#-pré-requisitos)
-- [Instalação](#-instalação)
-- [Configuração](#-configuração)
-- [API REST](#-api-rest)
-- [Estrutura do Projeto](#-estrutura-do-projeto)
-- [Banco de Dados](#-banco-de-dados)
-- [Contribuindo](#-contribuindo)
+> **RDL (Redirect Lab)** é um encurtador de URLs moderno construído como um **monolito modular**, projetado para funcionar de forma standalone e também ser facilmente integrado com outras APIs. A aplicação está em construção ativa, porém já se encontra em uma **v1 praticamente estável**.
 
 ---
 
-## 🎯 Sobre o Projeto
+## Visão Geral
 
-O **RDL** é um sistema completo de encurtamento de URLs desenvolvido com **Spring Boot 3 + Thymeleaf**, oferecendo uma aplicação web full-stack pronta para uso. Com interface moderna construída em DaisyUI e HTMX, o sistema permite gerenciar links encurtados de forma intuitiva e responsiva.
+O RDL foi desenvolvido com foco em **modularidade** e **baixo acoplamento**, permitindo que módulos inteiros (especialmente o de `Users`) possam ser reutilizados em outros projetos com mínimas alterações.
 
-### ✨ Principais Características
+### Status do Projeto
 
-- 🚀 **Performance**: Spring Boot 3 com Java 21
-- 🎨 **Interface Moderna**: Thymeleaf + DaisyUI + Tailwind CSS (tema dark)
-- 🔄 **Interatividade**: HTMX para atualizações dinâmicas sem reload
-- 🔒 **Seguro**: Validações robustas e tratamento de exceções global
-- 📊 **Migrations**: Flyway para controle de versão do banco
-- 🐘 **PostgreSQL**: Banco de dados relacional confiável
-- 🔄 **CRUD Completo**: Interface web com Create, Read, Update, Delete e Toggle
-- 🌐 **REST API**: Endpoints prontos para integração externa
-- 📱 **Responsivo**: Layout adaptável para mobile, tablet e desktop
+| Componente | Status |
+|------------|--------|
+| Core Infrastructure | ✅ Estável |
+| Autenticação Web (Session + CSRF) | ✅ Estável |
+| Autenticação API (JWT + Refresh Token) | ✅ Estável |
+| Módulo de URLs | ✅ Estável |
+| Módulo de Usuários | 🔄 Em desenvolvimento |
+| Dashboard & Métricas | 📋 Planejado |
 
 ---
 
-## 🛠️ Tecnologias
+## Stack Tecnológica
 
 ### Backend
-- **Java 21** - Linguagem de programação
-- **Spring Boot 3.5.8** - Framework principal
-- **Spring Data JPA** - Persistência de dados
-- **Spring Validation** - Validação de dados
-- **Lombok** - Redução de boilerplate
 
-### Frontend
-- **Thymeleaf** - Template engine server-side
-- **DaisyUI 4.12.14** - Biblioteca de componentes UI
-- **Tailwind CSS** - Framework CSS utility-first
-- **HTMX 2.0.4** - Interatividade sem JavaScript complexo
+| Tecnologia | Versão | Descrição |
+|------------|--------|-----------|
+| **Java** | 21 | Linguagem principal com features modernas (Records, Pattern Matching) |
+| **Spring Boot** | 3.5.8 | Framework base com auto-configuração |
+| **Spring Security** | 6.x | Autenticação e autorização |
+| **Spring Data JPA** | - | ORM e persistência |
+| **Flyway** | - | Migrations e versionamento de banco |
+| **Lombok** | - | Redução de boilerplate |
+| **JJWT** | 0.12.5 | Geração e validação de JWT |
 
-### Banco de Dados
-- **PostgreSQL** - Banco de dados relacional
-- **Flyway** - Migrations e controle de versão
+### Frontend (Server-Side Rendering)
 
-### Ferramentas
-- **Maven** - Gerenciamento de dependências
-- **Spring DevTools** - Hot reload em desenvolvimento
-- **Spring Dotenv** - Gerenciamento de variáveis de ambiente
+| Tecnologia | Versão | Descrição |
+|------------|--------|-----------|
+| **Thymeleaf** | 3.x | Template engine server-side |
+| **Thymeleaf Extras Spring Security 6** | - | Integração sec:authorize |
+| **DaisyUI** | 4.12.14 | Componentes UI (tema Winter) |
+| **Tailwind CSS** | CDN | Utility-first CSS |
+| **HTMX** | 2.0.4 | Interatividade sem JavaScript complexo |
+| **Lucide Icons** | latest | Ícones SVG |
+
+### Banco de Dados & Infraestrutura
+
+| Tecnologia | Versão | Descrição |
+|------------|--------|-----------|
+| **PostgreSQL** | 16 | Banco de dados relacional |
+| **Flyway** | - | Controle de versão do schema |
+| **Spring Dotenv** | 4.0.0 | Gerenciamento de variáveis .env |
 
 ---
 
-## 🏗️ Arquitetura
+## Arquitetura
 
-O projeto segue uma **arquitetura em camadas** (Layered Architecture) com separação clara de responsabilidades:
+O projeto segue uma arquitetura em camadas com **baixo acoplamento** entre módulos, inspirada em Clean Architecture e Domain-Driven Design (DDD) simplificado.
 
 ```
-┌─────────────────────────────────────────┐
-│           API Layer                     │
-│  (Controllers, DTOs, Mappers)          │
-└─────────────┬───────────────────────────┘
-              │
-┌─────────────▼───────────────────────────┐
-│         Domain Layer                    │
-│  (Services, Entities, Repositories)    │
-└─────────────┬───────────────────────────┘
-              │
-┌─────────────▼───────────────────────────┐
-│          Core Layer                     │
-│  (Exceptions, Configurations)          │
-└─────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                      API Layer                              │
+│    Controllers (REST + Web), DTOs, Mappers                  │
+│    Comunicação com o mundo externo                          │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+┌─────────────────────────▼───────────────────────────────────┐
+│                    Domain Layer                             │
+│    Entities, Repositories, Services                         │
+│    Regras de negócio, tokens, validações                    │
+│    ⭐ Módulo reutilizável em outros projetos                │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+┌─────────────────────────▼───────────────────────────────────┐
+│                     Core Layer                              │
+│    SecurityConfig, Filters, Exception Handlers              │
+│    Configurações globais e respostas padrão                 │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+┌─────────────────────────▼───────────────────────────────────┐
+│                Infrastructure Layer                         │
+│    Properties, Schedulers, Integrações externas             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+### Estrutura de Diretórios
 
-## ⚡ Funcionalidades
+```
+src/main/java/space/bielsolososdev/rdl/
+├── api/                              # Camada de API
+│   ├── controller/
+│   │   ├── rest/                     # Controllers REST (JWT Auth)
+│   │   └── web/                      # Controllers Web (Session Auth)
+│   ├── mapper/                       # Conversores DTO <-> Entity
+│   └── model/                        # DTOs e Records
+│
+├── core/                             # Camada Core (Configurações)
+│   ├── config/                       # Configurações gerais
+│   ├── exception/                    # Exceções customizadas
+│   │   └── globalconfig/             # GlobalExceptionHandler
+│   ├── security/                     # Spring Security Config
+│   │   ├── SecurityConfig.java       # Configuração de rotas e filtros
+│   │   └── JwtAuthenticationFilter.java
+│   └── utils/                        # Utilitários
+│
+├── domain/                           # Camada de Domínio (Regras de Negócio)
+│   ├── url/                          # Módulo de URLs
+│   │   ├── model/                    # Entity UrlRedirect
+│   │   ├── repository/               # JPA Repository
+│   │   └── service/                  # UrlRedirectService
+│   │
+│   └── users/                        # Módulo de Usuários ⭐
+│       ├── model/                    # Entity User, Role
+│       ├── repository/               # UserRepository
+│       └── service/
+│           ├── UserService.java      # CRUD de usuários
+│           ├── AuthService.java      # Login JWT + Refresh
+│           ├── RefreshTokenService.java
+│           └── CustomUserDetailsService.java
+│
+├── infrastructure/                   # Camada de Infraestrutura
+│   ├── RdlProperties.java            # @ConfigurationProperties
+│   └── scheduler/                    # Jobs agendados
+│
+└── RdlApplication.java               # Entry point
+```
 
-### ✅ Implementadas
+### Filosofia de Modularidade
 
-#### Interface Web (Thymeleaf + HTMX)
-- [x] **Gerenciamento Completo de URLs** - Interface web full-stack para criar, listar, editar e deletar redirects
-- [x] **Atualizações Dinâmicas** - HTMX para interações sem reload de página
-- [x] **Design Responsivo** - Layout adaptável para mobile, tablet e desktop
-- [x] **Copiar para Clipboard** - Botão para copiar links encurtados
-- [x] **Toggle de Status** - Habilitar/desabilitar redirects com um clique
-- [x] **Confirmação de Exclusão** - Dialog de confirmação antes de deletar
+A **camada Domain** foi projetada para ser **copiável** para outros projetos:
 
-#### API REST
-- [x] **Criar Redirect** - Endpoint POST para criar novos links encurtados
-- [x] **Listar Redirects** - Endpoint GET para listar todos os redirects
-- [x] **Buscar por Slug** - Buscar redirect específico
-- [x] **Atualizar Redirect** - Endpoint PUT para atualização completa
-- [x] **Deletar Redirect** - Endpoint DELETE para remoção
-- [x] **Habilitar/Desabilitar** - Endpoint PATCH para toggle de status
-- [x] **Redirecionamento** - Sistema de redirecionamento para URL original
+- **Baixo acoplamento**: Dependências mínimas com outras camadas
+- **Self-contained**: Cada módulo possui Entity, Repository e Service
+- **Exceção controlada**: JwtService na Domain depende de Core (RdlProperties) e Infrastructure, mas essa é uma dependência aceitável e documentada
 
-#### Sistema
-- [x] **Página 404 Customizada** - Interface elegante para erros
-- [x] **Health Check** - Monitoramento do status da aplicação
-- [x] **Tratamento Global de Exceções** - Handler centralizado com MessageResponse
-- [x] **Validações Robustas** - Validação de dados em todas as camadas
-
-### 🔜 Roadmap
-
-#### 🔐 Autenticação e Autorização (Fase 1)
-- [ ] Sistema de registro de usuários
-- [ ] Login com email e senha
-- [ ] Sessões com Spring Security
-- [ ] Páginas protegidas (dashboard, gerenciamento de URLs)
-- [ ] Rotas públicas vs. rotas autenticadas
-- [ ] Gerenciamento de permissões (usuário comum vs. admin)
-
-#### 🎫 API com Autenticação JWT (Fase 2)
-- [ ] Implementação de JWT (JSON Web Token)
-- [ ] Endpoints de autenticação (`/api/auth/login`, `/api/auth/register`)
-- [ ] Refresh tokens para renovação de sessão
-- [ ] Middleware de autenticação JWT
-- [ ] Proteção de endpoints REST com tokens
-- [ ] Documentação Swagger/OpenAPI com autenticação
-
-#### 📊 Funcionalidades Avançadas (Fase 3)
-- [ ] Dashboard de usuário com estatísticas pessoais
-- [ ] Estatísticas de cliques por redirect
-- [ ] Histórico de acessos (IP, localização, navegador)
-- [ ] QR Code gerado automaticamente para cada link
-- [ ] Sistema de expiração de links (TTL configurável)
-- [ ] Personalização avançada de slugs
-- [ ] Tags e categorias para organização de links
-- [ ] Exportação de dados (CSV, JSON)
-
-#### 🎨 Melhorias de Interface (Fase 4)
-- [ ] Área de perfil do usuário
-- [ ] Temas customizáveis (winter/dark/auto)
-- [ ] Gráficos interativos de estatísticas
-- [ ] Preview de URL antes de redirecionar
-- [ ] Notificações em tempo real
+> 💡 **Dica**: Para reutilizar o módulo `users` em outro projeto, basta copiar a pasta `domain/users`, ajustar o package e configurar as properties de JWT.
 
 ---
 
-## 📦 Pré-requisitos
+## Sistema de Autenticação
 
-- **Java 21** ou superior
-- **PostgreSQL 16** ou superior
-- **Maven 3.8+**
-- **Git**
+O RDL implementa **dois sistemas de autenticação** para diferentes casos de uso:
 
----
+### 1. Autenticação Web (Session + CSRF)
 
-## 🚀 Instalação
+Para as páginas renderizadas com Thymeleaf:
 
-### 1. Clone o repositório
+- **Spring Security Form Login** com sessões HTTP
+- **CSRF Protection** integrado com HTMX
+- **Remember-me** com cookie persistente
+- **Thymeleaf Security Dialect** (`sec:authorize`, `sec:authentication`)
+
+```html
+<!-- Exemplo de uso no Thymeleaf -->
+<div sec:authorize="isAuthenticated()">
+    <span sec:authentication="name">Usuário</span>
+</div>
+```
+
+### 2. Autenticação API (JWT + Refresh Token)
+
+Para integrações REST:
+
+- **Access Token JWT** (curta duração)
+- **Refresh Token** (longa duração, single-use)
+- **Stateless** para APIs
+- **Filtro JWT** apenas para rotas `/api/**`
 
 ```bash
+# Login
+POST /api/auth/login
+{
+  "username": "user",
+  "password": "password"
+}
+
+# Response
+{
+  "accessToken": "eyJhbGc...",
+  "refreshToken": "uuid-token",
+  "expiresIn": 900000
+}
+
+# Refresh
+POST /api/auth/refresh
+{
+  "refreshToken": "uuid-token"
+}
+```
+
+### Rotas e Permissões
+
+| Rota | Método | Autenticação | Descrição |
+|------|--------|--------------|-----------|
+| `/` | GET | Pública | Home page |
+| `/login` | GET/POST | Pública | Login web |
+| `/urls/**` | * | Session | Gerenciamento URLs (web) |
+| `/profile/**` | * | Session | Perfil do usuário |
+| `/api/auth/**` | POST | Pública | Endpoints de autenticação |
+| `/api/**` | * | JWT | API REST protegida |
+| `/redirect/{slug}` | GET | Pública | Redirecionamento |
+
+---
+
+## Funcionalidades Atuais
+
+### Interface Web (Thymeleaf + HTMX)
+
+- ✅ Login/Logout com sessão
+- ✅ Gerenciamento completo de URLs (CRUD)
+- ✅ Toggle de status com HTMX (sem reload)
+- ✅ Copiar link para clipboard
+- ✅ Página de perfil com troca de senha
+- ✅ Design responsivo (DaisyUI Winter theme)
+- ✅ Ícones SVG (Lucide Icons)
+
+### API REST
+
+- ✅ Autenticação JWT com refresh token
+- ✅ CRUD de redirects protegido
+- ✅ Tratamento global de exceções
+- ✅ Respostas padronizadas (MessageResponse)
+
+### Sistema
+
+- ✅ Migrations automáticas (Flyway)
+- ✅ Cleanup automático de refresh tokens expirados
+- ✅ Health check endpoint
+- ✅ Página 404 customizada
+
+---
+
+## Roadmap
+
+### Fase 1: Auditoria e Logging (Próximo)
+
+- [ ] **LogBack estruturado** com rastreamento completo
+- [ ] **Auditoria de acessos**: IP, User-Agent, timestamps
+- [ ] **Detecção de bots** com logging específico
+- [ ] **Honey pots** para identificar tentativas maliciosas
+- [ ] **Auditoria de usuários**: login, logout, alterações
+
+### Fase 2: Módulo de Usuários Completo
+
+- [ ] **CRUD Web completo**: criar, listar, editar usuários
+- [ ] **Troca de senha** (já implementado parcialmente)
+- [ ] **Gerenciamento de roles** (ADMIN, USER)
+- [ ] **API REST completa** para usuários
+- [ ] **Ativação/desativação** de contas
+- [ ] **Recuperação de senha** por email
+
+### Fase 3: Redirects por Usuário
+
+- [ ] **Ownership de URLs**: cada usuário gerencia seus próprios redirects
+- [ ] **URLs públicas vs privadas**
+- [ ] **Limite de URLs** por plano/role
+- [ ] **Slugs personalizados** por usuário
+
+### Fase 4: Métricas e Analytics
+
+- [ ] **Contagem de cliques** por redirect
+- [ ] **Histórico de acessos**: timestamp, IP, referrer
+- [ ] **Geolocalização** aproximada (país, região)
+- [ ] **User-Agent parsing**: browser, OS, device
+- [ ] **Dashboard de métricas** com gráficos
+- [ ] **Exportação de dados** (CSV, JSON)
+
+### Fase 5: Features Avançadas
+
+- [ ] **QR Code** gerado automaticamente
+- [ ] **Links com expiração** (TTL configurável)
+- [ ] **Preview de destino** antes de redirecionar
+- [ ] **Tags e categorias** para organização
+- [ ] **API pública** com rate limiting
+
+---
+
+## Instalação
+
+### Pré-requisitos
+
+- Java 21+
+- PostgreSQL 16+
+- Maven 3.8+
+
+### Setup
+
+```bash
+# Clone o repositório
 git clone https://github.com/bielsolosos/rdl.git
 cd rdl
+
+# Crie o banco de dados
+psql -U postgres -c "CREATE DATABASE \"rdl-db\";"
+
+# Configure as variáveis de ambiente
+cp .env.example .env
+# Edite o .env com suas configurações
+
+# Execute
+./mvnw spring-boot:run
 ```
 
-### 2. Configure o banco de dados
-
-Crie o banco de dados PostgreSQL:
-
-```sql
-CREATE DATABASE "rdl-db";
-```
-
-### 3. Configure as variáveis de ambiente
-
-Crie um arquivo `.env` na raiz do projeto (use `.env.example` como base):
+### Variáveis de Ambiente
 
 ```env
-# Database Configuration
+# Database
 DB_URL=jdbc:postgresql://localhost:5432/rdl-db
 DB_USERNAME=postgres
 DB_PASSWORD=sua_senha
 
-# JPA Configuration
+# JWT
+JWT_SECRET=sua-chave-secreta-256-bits-minimo
+JWT_EXPIRATION=900000
+JWT_REFRESH_EXPIRATION=604800000
+
+# App
+APP_NAME=Redirect Lab
 SHOW_SQL=false
 ```
 
-### 4. Execute o projeto
-
-```bash
-# Com Maven Wrapper
-./mvnw spring-boot:run
-
-# Ou com Maven instalado
-mvn spring-boot:run
-```
-
-A aplicação estará disponível em: **http://localhost:8080**
-
 ---
 
-## ⚙️ Configuração
+## API Reference
 
-### application.yml
-
-```yaml
-spring:
-  application:
-    name: rdl
-  
-  datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/rdl-db}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
-  
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    show-sql: ${SHOW_SQL:false}
-  
-  flyway:
-    enabled: true
-    locations: classpath:db/migration
-    baseline-on-migrate: true
-```
-
----
-
-## 🌐 API REST
-
-### Base URL
-```
-http://localhost:8080
-```
-
-### Endpoints
-
-#### 🔗 Redirects
-
-| Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| `GET` | `/redirect/{slug}` | Redireciona para URL original |
-| `GET` | `/redirect` | Lista todos os redirects |
-| `POST` | `/redirect` | Cria novo redirect |
-| `PUT` | `/redirect/{id}` | Atualiza redirect |
-| `DELETE` | `/redirect/{id}` | Deleta redirect |
-| `PATCH` | `/redirect/{id}/toggle` | Habilita/Desabilita redirect |
-
-#### 📄 Páginas Web
-
-| Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| `GET` | `/` | Página inicial |
-| `GET` | `/urls` | Gerenciamento de URLs (lista, criar, editar, deletar) |
-| `POST` | `/urls` | Criar novo redirect (HTMX) |
-| `POST` | `/urls/{id}/toggle` | Habilitar/desabilitar redirect (HTMX) |
-| `POST` | `/urls/{id}/delete` | Deletar redirect (HTMX) |
-| `GET` | `/health` | Status da aplicação |
-| `GET` | `/error/404` | Página de erro 404 |
-
-### Exemplos de Requisições
-
-#### Criar Redirect
+### Autenticação
 
 ```bash
-POST /redirect
+# Login
+POST /api/auth/login
 Content-Type: application/json
+{
+  "username": "admin",
+  "password": "password"
+}
 
+# Refresh Token
+POST /api/auth/refresh
+Content-Type: application/json
+{
+  "refreshToken": "uuid-refresh-token"
+}
+```
+
+### Redirects (Requer JWT)
+
+```bash
+# Listar
+GET /api/redirect
+Authorization: Bearer {accessToken}
+
+# Criar
+POST /api/redirect
+Authorization: Bearer {accessToken}
 {
   "slug": "github",
   "url": "https://github.com/bielsolosos",
   "isEnabled": true
 }
-```
 
-**Resposta:**
-```json
-{
-  "id": 1,
-  "slug": "github",
-  "url": "https://github.com/bielsolosos",
-  "isEnabled": true
-}
-```
+# Toggle status
+PATCH /api/redirect/{id}/toggle
+Authorization: Bearer {accessToken}
 
-#### Atualizar Redirect
-
-```bash
-PUT /redirect/1
-Content-Type: application/json
-
-{
-  "slug": "github-new",
-  "url": "https://github.com/bielsolosos/rdl",
-  "isEnabled": true
-}
-```
-
-#### Habilitar/Desabilitar
-
-```bash
-PATCH /redirect/1/toggle
-```
-
-#### Deletar Redirect
-
-```bash
-DELETE /redirect/1
-```
-
-**Resposta:**
-```json
-{
-  "message": "Redirect deletado com sucesso"
-}
-```
-
-### Tratamento de Erros
-
-Todas as respostas de erro seguem o padrão:
-
-```json
-{
-  "message": "Descrição do erro"
-}
-```
-
-**Códigos HTTP:**
-- `200` - Sucesso
-- `400` - Erro de validação/negócio
-- `404` - Recurso não encontrado
-- `500` - Erro interno do servidor
-
----
-
-## 📁 Estrutura do Projeto
-
-```
-rdl/
-├── src/
-│   ├── main/
-│   │   ├── java/space/bielsolososdev/rdl/
-│   │   │   ├── api/                          # Camada de API
-│   │   │   │   ├── controller/
-│   │   │   │   │   ├── rest/                 # Controllers REST
-│   │   │   │   │   │   ├── HomeRestController.java
-│   │   │   │   │   │   └── UrlRedirectController.java
-│   │   │   │   │   └── web/                  # Controllers Web (Thymeleaf)
-│   │   │   │   │       ├── ErrorController.java
-│   │   │   │   │       ├── HomeController.java
-│   │   │   │   │       └── UrlManagementController.java
-│   │   │   │   ├── mapper/                   # Mappers DTO <-> Entity
-│   │   │   │   │   └── UrlRedirectMapper.java
-│   │   │   │   └── model/                    # DTOs/Records
-│   │   │   │       ├── HealthStatusResponse.java
-│   │   │   │       ├── MessageResponse.java
-│   │   │   │       └── urlredirect/
-│   │   │   │           ├── UrlRedirectRequest.java
-│   │   │   │           └── UrlRedirectResponse.java
-│   │   │   │
-│   │   │   ├── core/                         # Camada Core
-│   │   │   │   └── exception/
-│   │   │   │       ├── BusinessException.java
-│   │   │   │       ├── RedirectException.java
-│   │   │   │       └── globalconfig/
-│   │   │   │           └── GlobalExceptionHandler.java
-│   │   │   │
-│   │   │   ├── domain/                       # Camada de Domínio
-│   │   │   │   └── url/
-│   │   │   │       ├── model/
-│   │   │   │       │   └── UrlRedirect.java  # Entity
-│   │   │   │       ├── repository/
-│   │   │   │       │   └── UrlRedirectRepository.java
-│   │   │   │       └── service/
-│   │   │   │           └── UrlRedirectService.java
-│   │   │   │
-│   │   │   └── RdlApplication.java           # Main class
-│   │   │
-│   │   └── resources/
-│   │       ├── db/migration/                 # Flyway migrations
-│   │       │   └── V1__create_url_redirect_table.sql
-│   │       ├── templates/                    # Thymeleaf templates
-│   │       │   ├── layout/
-│   │       │   │   └── base.html             # Layout base com navbar
-│   │       │   ├── error/
-│   │       │   │   └── 404.html              # Página 404 customizada
-│   │       │   ├── urls/
-│   │       │   │   └── list.html             # Gerenciamento de URLs (HTMX)
-│   │       │   ├── index.html                # Página inicial
-│   │       │   └── health.html               # Health check
-│   │       └── application.yml
-│   │
-│   └── test/                                 # Testes
-│
-├── .env.example                              # Exemplo de variáveis
-├── pom.xml                                   # Maven dependencies
-└── README.md
-```
-
-### Camadas do Projeto
-
-#### 🌐 API Layer
-Responsável pela comunicação com o mundo externo (REST APIs e páginas web).
-
-- **Controllers REST**: Endpoints da API
-- **Controllers Web**: Páginas HTML com Thymeleaf
-- **DTOs**: Objetos de transferência de dados
-- **Mappers**: Conversão entre DTOs e Entities
-
-#### 💼 Domain Layer
-Contém as regras de negócio e lógica da aplicação.
-
-- **Entities**: Modelos do banco de dados (JPA)
-- **Repositories**: Interface com o banco (Spring Data)
-- **Services**: Lógica de negócio
-
-#### ⚙️ Core Layer
-Configurações e funcionalidades transversais.
-
-- **Exceptions**: Exceções customizadas
-- **Global Handlers**: Tratamento centralizado de erros
-
----
-
-## 🗄️ Banco de Dados
-
-### Modelo de Dados
-
-#### Tabela: `urls_redirect`
-
-| Coluna | Tipo | Descrição |
-|--------|------|-----------|
-| `id` | BIGSERIAL | ID único (chave primária) |
-| `slug` | VARCHAR(50) | Código curto da URL (único) |
-| `url` | VARCHAR(255) | URL original completa |
-| `is_enabled` | BOOLEAN | Status de ativação |
-| `created_at` | TIMESTAMP | Data de criação |
-| `updated_at` | TIMESTAMP | Data de atualização |
-
-**Índices:**
-- `idx_slug` - Índice único no campo slug (busca rápida)
-- `idx_is_enabled` - Índice no campo is_enabled (filtros)
-
-### Migrations
-
-O projeto utiliza **Flyway** para versionamento do banco de dados.
-
-Localização: `src/main/resources/db/migration/`
-
-#### V1__create_url_redirect_table.sql
-```sql
-CREATE TABLE urls_redirect (
-    id BIGSERIAL PRIMARY KEY,
-    slug VARCHAR(50) UNIQUE NOT NULL,
-    url VARCHAR(255) NOT NULL,
-    is_enabled BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE INDEX idx_slug ON urls_redirect(slug);
-CREATE INDEX idx_is_enabled ON urls_redirect(is_enabled);
+# Deletar
+DELETE /api/redirect/{id}
+Authorization: Bearer {accessToken}
 ```
 
 ---
 
-## 🎨 Interface
+## Contribuindo
 
-### Páginas Disponíveis
+Contribuições são bem-vindas! Por favor:
 
-#### 🏠 Home (`/`)
-Página inicial com informações do sistema e links de navegação.
-
-#### 🔗 Gerenciamento de URLs (`/urls`)
-Interface completa para gerenciar redirects com:
-- Formulário de criação de novos links
-- Tabela com listagem de todos os redirects
-- Botões de ação (copiar, habilitar/desabilitar, deletar)
-- Atualizações dinâmicas via HTMX (sem reload)
-- Design responsivo adaptável para mobile
-- Confirmação antes de deletar
-
-#### 🏥 Health Check (`/health`)
-Dashboard com informações detalhadas:
-- Status da aplicação
-- Conexão com banco de dados
-- Configurações do sistema
-- Uptime e performance
-
-#### ❌ Erro 404 (`/error/404`)
-Página customizada para URLs não encontradas, com:
-- Design elegante com DaisyUI
-- Informações sobre o erro
-- Slug solicitado (quando disponível)
-- Botões de navegação
-
-### Tema e Experiência
-
-O projeto utiliza o tema **Dark** do DaisyUI, proporcionando:
-- ✅ Interface moderna e profissional
-- ✅ Melhor experiência visual em ambientes com pouca luz
-- ✅ Componentes responsivos para todos os dispositivos
-- ✅ Animações suaves e transições elegantes
-- ✅ Interatividade via HTMX sem complexidade do JavaScript moderno
+1. Fork o projeto
+2. Crie uma branch (`git checkout -b feature/nova-feature`)
+3. Commit suas mudanças (`git commit -m 'Add nova feature'`)
+4. Push para a branch (`git push origin feature/nova-feature`)
+5. Abra um Pull Request
 
 ---
 
-## 🔒 Segurança e Validações
+## Licença
 
-### Validações Implementadas
-
-- ✅ Slug único no sistema
-- ✅ URL única no sistema
-- ✅ Validação de campos obrigatórios
-- ✅ Verificação de existência antes de atualizar/deletar
-- ✅ Validação de tamanhos máximos (slug: 50, url: 255)
-
-### Tratamento de Exceções
-
-O **GlobalExceptionHandler** captura e trata automaticamente:
-
-1. **BusinessException** → Retorna JSON com mensagem de erro (HTTP 400)
-2. **RedirectException** → Redireciona para página 404 customizada
-3. **Exception genérica** → Retorna mensagem de erro interno (HTTP 500)
-
----
-
-## 🚦 Como Usar
-
-### 1. Acessar a Aplicação
-```
-http://localhost:8080
-```
-
-### 2. Interface Web - Gerenciar URLs
-Acesse `/urls` para:
-- Criar novos redirects preenchendo o formulário
-- Visualizar todos os links cadastrados
-- Copiar links encurtados para clipboard
-- Habilitar/desabilitar redirects existentes
-- Deletar redirects (com confirmação)
-
-### 3. API REST - Criar um Redirect
-Integre com sistemas externos via API:
-
-```bash
-curl -X POST http://localhost:8080/redirect \
-  -H "Content-Type: application/json" \
-  -d '{
-    "slug": "meu-link",
-    "url": "https://exemplo.com/pagina-muito-longa",
-    "isEnabled": true
-  }'
-```
-
-### 4. Acessar o Link Curto
-```
-http://localhost:8080/redirect/meu-link
-```
-
-O usuário será automaticamente redirecionado para a URL original!
-
-### 5. Integração Externa
-A API REST está pronta para ser consumida por:
-- Aplicações frontend (React, Vue, Angular)
-- Apps mobile (Android, iOS)
-- Sistemas backend de terceiros
-- Scripts e automações
-
-**Exemplo de integração JavaScript:**
-```javascript
-// Criar redirect
-const response = await fetch('http://localhost:8080/redirect', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    slug: 'github',
-    url: 'https://github.com/usuario',
-    isEnabled: true
-  })
-});
-
-const redirect = await response.json();
-console.log(`Link criado: ${window.location.origin}/redirect/${redirect.slug}`);
-```
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
 ---
 
 <div align="center">
 
-**⭐ Se este projeto foi útil, considere dar uma estrela no GitHub!**
+**Desenvolvido por [@bielsolosos](https://github.com/bielsolosos)**
+
+⭐ Se este projeto foi útil, considere dar uma estrela!
 
 </div>
