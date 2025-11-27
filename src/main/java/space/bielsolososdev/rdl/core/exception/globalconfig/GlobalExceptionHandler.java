@@ -14,7 +14,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import jakarta.servlet.http.HttpServletResponse;
-import space.bielsolososdev.rdl.api.model.MessageResponse;
 import space.bielsolososdev.rdl.core.exception.BusinessException;
 import space.bielsolososdev.rdl.core.exception.RedirectException;
 
@@ -26,14 +25,14 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<MessageResponse> handleBusinessException(
-            BusinessException ex, 
+            BusinessException ex,
             WebRequest request) {
-        
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new MessageResponse(ex.getMessage()));
     }
-    
+
     /**
      * Trata credenciais inválidas - retorna 401
      */
@@ -41,12 +40,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MessageResponse> handleBadCredentials(
             BadCredentialsException ex,
             WebRequest request) {
-        
+
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(new MessageResponse("Usuário ou senha incorretos"));
     }
-    
+
     /**
      * Trata conta desabilitada - retorna 403
      */
@@ -54,12 +53,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MessageResponse> handleDisabled(
             DisabledException ex,
             WebRequest request) {
-        
+
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
                 .body(new MessageResponse("Conta desabilitada"));
     }
-    
+
     /**
      * Trata conta bloqueada - retorna 403
      */
@@ -67,12 +66,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MessageResponse> handleLocked(
             LockedException ex,
             WebRequest request) {
-        
+
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
                 .body(new MessageResponse("Conta bloqueada"));
     }
-    
+
     /**
      * Trata outras exceções de autenticação - retorna 401
      */
@@ -80,12 +79,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MessageResponse> handleAuthenticationException(
             AuthenticationException ex,
             WebRequest request) {
-        
+
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(new MessageResponse("Falha na autenticação"));
     }
-    
+
     /**
      * Trata argumentos inválidos (ex: refresh token inválido) - retorna 400
      */
@@ -93,23 +92,23 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MessageResponse> handleIllegalArgument(
             IllegalArgumentException ex,
             WebRequest request) {
-        
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new MessageResponse(ex.getMessage()));
     }
-    
+
     /**
      * Trata exceções de redirect - redireciona para página 404
      */
     @ExceptionHandler(RedirectException.class)
     public void handleRedirectException(
-            RedirectException ex, 
+            RedirectException ex,
             HttpServletResponse response) throws IOException {
-        
+
         response.sendRedirect("/error/404?slug=" + ex.getSlug());
     }
-    
+
     /**
      * Trata rotas não encontradas - retorna 404
      */
@@ -117,22 +116,24 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MessageResponse> handleNotFound(
             NoHandlerFoundException ex,
             WebRequest request) {
-        
+
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(new MessageResponse("Rota não encontrada: " + ex.getRequestURL()));
     }
-    
+
     /**
      * Trata qualquer outra exceção não mapeada - retorna 500
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<MessageResponse> handleGlobalException(
-            Exception ex, 
+            Exception ex,
             WebRequest request) {
-        
+
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new MessageResponse("Ocorreu um erro inesperado no servidor"));
     }
 }
+
+record MessageResponse(String message) {}
