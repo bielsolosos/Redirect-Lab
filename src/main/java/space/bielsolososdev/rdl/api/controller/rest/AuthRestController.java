@@ -29,7 +29,7 @@ public class AuthRestController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<?> refresh(@RequestBody RefreshRequest request) {
+    public ResponseEntity<TokenResponse> refresh(@RequestBody RefreshRequest request) {
         return ResponseEntity.ok().body(service.refresh(request));
     }
 }

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" data-theme="winter">
+<head th:replace="~{layout/base :: head('Login - Redirect Lab')}"></head>
+
+<body class="min-h-screen bg-gradient-to-br from-primary/10 via-base-100 to-secondary/10">
+    
+    <div class="min-h-screen flex items-center justify-center px-4">
+        <div class="card w-full max-w-md bg-base-100 shadow-2xl">
+            <div class="card-body">
+                <!-- Logo e Título -->
+                <div class="text-center mb-6">
+                    <a href="/" class="text-5xl inline-block mb-2">🔗</a>
+                    <h1 class="text-2xl font-bold text-primary">Redirect Lab</h1>
+                    <p class="text-base-content/60">Faça login para continuar</p>
+                </div>
+                
+                <!-- Alertas -->
+                <div th:if="${error}" class="alert alert-error mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span th:text="${error}">Erro</span>
+                </div>
+                
+                <div th:if="${success}" class="alert alert-success mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span th:text="${success}">Sucesso</span>
+                </div>
+                
+                <!-- Formulário de Login -->
+                <form th:action="@{/login}" method="post">
+                    <div class="form-control mb-4">
+                        <label class="label">
+                            <span class="label-text font-medium">Usuário</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            name="username" 
+                            placeholder="Digite seu usuário" 
+                            class="input input-bordered w-full" 
+                            required 
+                            autofocus />
+                    </div>
+                    
+                    <div class="form-control mb-6">
+                        <label class="label">
+                            <span class="label-text font-medium">Senha</span>
+                        </label>
+                        <input 
+                            type="password" 
+                            name="password" 
+                            placeholder="Digite sua senha" 
+                            class="input input-bordered w-full" 
+                            required />
+                        <label class="label">
+                            <a href="#" class="label-text-alt link link-hover text-primary">Esqueceu a senha?</a>
+                        </label>
+                    </div>
+                    
+                    <div class="form-control mb-4">
+                        <label class="label cursor-pointer justify-start gap-3">
+                            <input type="checkbox" name="remember-me" class="checkbox checkbox-primary checkbox-sm" />
+                            <span class="label-text">Lembrar de mim</span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                        </svg>
+                        Entrar
+                    </button>
+                </form>
+                
+                <!-- Divider -->
+                <div class="divider text-base-content/40">ou</div>
+                
+                <!-- Link para registro -->
+                <p class="text-center text-base-content/70">
+                    Não tem uma conta? 
+                    <a href="/register" class="link link-primary font-medium">Cadastre-se</a>
+                </p>
+                
+                <!-- Voltar para home -->
+                <div class="text-center mt-4">
+                    <a href="/" class="btn btn-ghost btn-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        Voltar para Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>
