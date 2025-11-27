@@ -9,10 +9,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import space.bielsolososdev.rdl.api.model.auth.LoginRequest;
-import space.bielsolososdev.rdl.api.model.auth.RefreshRequest;
-import space.bielsolososdev.rdl.api.model.auth.TokenResponse;
 import space.bielsolososdev.rdl.core.utils.SecurityUtils;
+import space.bielsolososdev.rdl.domain.users.model.dto.LoginRequest;
+import space.bielsolososdev.rdl.domain.users.model.dto.RefreshRequest;
+import space.bielsolososdev.rdl.domain.users.model.dto.TokenResponse;
 
 @Service
 @RequiredArgsConstructor

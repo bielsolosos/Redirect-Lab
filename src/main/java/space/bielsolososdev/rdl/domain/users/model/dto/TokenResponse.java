@@ -1,4 +1,4 @@
-package space.bielsolososdev.rdl.api.model.auth;
+package space.bielsolososdev.rdl.domain.users.model.dto;
 
 public record TokenResponse(String token, String refreshToken) {
 

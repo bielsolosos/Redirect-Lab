@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import space.bielsolososdev.rdl.api.model.auth.LoginRequest;
-import space.bielsolososdev.rdl.api.model.auth.RefreshRequest;
-import space.bielsolososdev.rdl.api.model.auth.TokenResponse;
+import space.bielsolososdev.rdl.domain.users.model.dto.LoginRequest;
+import space.bielsolososdev.rdl.domain.users.model.dto.RefreshRequest;
+import space.bielsolososdev.rdl.domain.users.model.dto.TokenResponse;
 import space.bielsolososdev.rdl.domain.users.service.AuthService;
 
 /**
