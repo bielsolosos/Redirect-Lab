@@ -6,14 +6,14 @@
     <nav th:replace="~{layout/base :: navbar}"></nav>
     
     <!-- Main Content -->
-    <div class="container mx-auto p-4 lg:p-8">
+    <div class="container mx-auto p-3 sm:p-4 lg:p-8">
         <div class="max-w-full mx-auto">
             
             <!-- Header -->
-            <div class="flex justify-between items-center mb-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-6 sm:mb-8">
                 <div>
-                    <h1 class="text-4xl font-bold mb-2">Gerenciar URLs</h1>
-                    <p class="text-base-content/70">Crie, edite e gerencie seus links encurtados</p>
+                    <h1 class="text-2xl sm:text-4xl font-bold mb-1 sm:mb-2">Gerenciar URLs</h1>
+                    <p class="text-sm sm:text-base text-base-content/70">Crie, edite e gerencie seus links encurtados</p>
                 </div>
             </div>
 
@@ -33,10 +33,10 @@
             </div>
             
             <!-- Create Form with HTMX -->
-            <div class="card bg-base-100 shadow-xl mb-8 border border-base-300">
-                <div class="card-body">
-                    <h2 class="card-title text-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="card bg-base-100 shadow-xl mb-6 sm:mb-8 border border-base-300">
+                <div class="card-body p-4 sm:p-6">
+                    <h2 class="card-title text-primary text-base sm:text-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
                         Criar Novo Redirect
@@ -45,33 +45,33 @@
                     <form hx-post="/urls" 
                           hx-target="body" 
                           hx-swap="innerHTML"
-                          class="grid grid-cols-1 gap-4">
+                          class="grid grid-cols-1 gap-3 sm:gap-4">
                         
                         <div class="form-control w-full">
-                            <label class="label">
-                                <span class="label-text">Slug</span>
+                            <label class="label py-1">
+                                <span class="label-text text-sm">Slug</span>
                             </label>
                             <input type="text" 
                                    name="slug" 
                                    placeholder="exemplo: github" 
-                                   class="input input-bordered w-full" 
+                                   class="input input-bordered input-sm sm:input-md w-full" 
                                    required />
                         </div>
                         
                         <div class="form-control w-full">
-                            <label class="label">
-                                <span class="label-text">URL Original</span>
+                            <label class="label py-1">
+                                <span class="label-text text-sm">URL Original</span>
                             </label>
                             <input type="url" 
                                    name="url" 
                                    placeholder="https://exemplo.com/pagina-longa" 
-                                   class="input input-bordered w-full" 
+                                   class="input input-bordered input-sm sm:input-md w-full" 
                                    required />
                         </div>
                         
                         <div>
-                            <button type="submit" class="btn btn-primary w-full sm:w-auto">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <button type="submit" class="btn btn-primary btn-sm sm:btn-md w-full sm:w-auto">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                                 </svg>
                                 Criar Redirect
@@ -83,23 +83,75 @@
             
             <!-- URL List with HTMX -->
             <div class="card bg-base-100 shadow-xl border border-base-300">
-                <div class="card-body">
-                    <h2 class="card-title mb-4 text-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="card-body p-4 sm:p-6">
+                    <h2 class="card-title mb-4 text-primary text-base sm:text-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                         Lista de URLs
                     </h2>
                     
-                    <div th:if="${#lists.isEmpty(urls)}" class="text-center py-12 text-base-content/50">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div th:if="${#lists.isEmpty(urls)}" class="text-center py-8 sm:py-12 text-base-content/50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 sm:h-16 sm:w-16 mx-auto mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                         </svg>
-                        <p class="text-lg">Nenhuma URL cadastrada ainda</p>
-                        <p class="text-sm">Crie seu primeiro redirect acima</p>
+                        <p class="text-base sm:text-lg">Nenhuma URL cadastrada ainda</p>
+                        <p class="text-xs sm:text-sm">Crie seu primeiro redirect acima</p>
                     </div>
                     
-                    <div th:if="${!#lists.isEmpty(urls)}" class="overflow-x-auto">
+                    <!-- Mobile View: Cards -->
+                    <div th:if="${!#lists.isEmpty(urls)}" class="block sm:hidden space-y-3">
+                        <div th:each="url : ${urls}" class="card bg-base-200 shadow-sm">
+                            <div class="card-body p-3">
+                                <!-- Slug e Status -->
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center gap-2">
+                                        <kbd class="kbd kbd-sm text-xs" th:text="${url.slug}">slug</kbd>
+                                        <button onclick="copyToClipboard(this)" 
+                                                th:data-url="|http://localhost:8080/redirect/${url.slug}|"
+                                                class="btn btn-ghost btn-xs btn-square">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <span th:if="${url.isEnabled}" class="badge badge-success badge-xs">Ativo</span>
+                                    <span th:if="${!url.isEnabled}" class="badge badge-error badge-xs">Inativo</span>
+                                </div>
+                                
+                                <!-- URL -->
+                                <a th:href="${url.url}" 
+                                   target="_blank" 
+                                   class="link link-primary text-xs break-all line-clamp-2"
+                                   th:text="${url.url}">
+                                </a>
+                                
+                                <!-- Ações -->
+                                <div class="card-actions justify-end mt-2 pt-2 border-t border-base-300">
+                                    <button th:attr="hx-post=@{/urls/{id}/toggle(id=${url.id})}"
+                                            hx-target="body"
+                                            hx-swap="innerHTML"
+                                            type="button"
+                                            class="btn btn-xs btn-outline"
+                                            th:classappend="${url.isEnabled} ? 'btn-warning' : 'btn-success'">
+                                        <span th:text="${url.isEnabled} ? 'Desativar' : 'Ativar'"></span>
+                                    </button>
+                                    
+                                    <button th:attr="hx-post=@{/urls/{id}/delete(id=${url.id})}"
+                                            hx-target="body"
+                                            hx-swap="innerHTML"
+                                            hx-confirm="Tem certeza que deseja deletar este redirect?"
+                                            type="button"
+                                            class="btn btn-xs btn-outline btn-error">
+                                        Deletar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Desktop View: Table -->
+                    <div th:if="${!#lists.isEmpty(urls)}" class="hidden sm:block overflow-x-auto">
                         <table class="table w-full">
                             <thead>
                                 <tr>
@@ -112,7 +164,7 @@
                             <tbody>
                                 <tr th:each="url : ${urls}">
                                     <td>
-                                        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                                        <div class="flex items-center gap-2">
                                             <kbd class="kbd kbd-sm" th:text="${url.slug}">slug</kbd>
                                             <button onclick="copyToClipboard(this)" 
                                                     th:data-url="|http://localhost:8080/redirect/${url.slug}|"
