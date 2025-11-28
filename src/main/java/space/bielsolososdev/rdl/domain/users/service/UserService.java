@@ -41,4 +41,20 @@ public class UserService {
         return repository.save(user);
     }
 
+    public User createUser(String username, String email, String password){
+        if (repository.findByUsername(username).isPresent()) {
+            throw new BusinessException("Nome de usuário já está em uso");
+        }
+        
+        if (repository.findByEmail(email).isPresent()) {
+            throw new BusinessException("E-mail já está em uso");
+        }
+        
+        User entity = new User();  
+        entity.setEmail(email);
+        entity.setUsername(username); 
+        entity.setPassword(passwordEncoder.encode(password));
+
+        return repository.save(entity);
+    }
 }

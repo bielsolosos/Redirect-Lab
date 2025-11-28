@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" data-theme="winter">
-<head th:replace="~{layout/base :: head('Login - Redirect Lab')}"></head>
+<head th:replace="~{layout/base :: head('Cadastro - Redirect Lab')}"></head>
 
 <body class="min-h-screen bg-gradient-to-br from-primary/10 via-base-100 to-secondary/10">
     
-    <div class="min-h-screen flex items-center justify-center px-4">
+    <div class="min-h-screen flex items-center justify-center px-4 py-8">
         <div class="card w-full max-w-md bg-base-100 shadow-2xl">
             <div class="card-body">
                 <!-- Logo e Título -->
@@ -13,7 +13,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
                     </a>
                     <h1 class="text-2xl font-bold text-primary">Redirect Lab</h1>
-                    <p class="text-base-content/60">Faça login para continuar</p>
+                    <p class="text-base-content/60">Crie sua conta</p>
                 </div>
                 
                 <!-- Alertas -->
@@ -24,15 +24,8 @@
                     <span th:text="${error}">Erro</span>
                 </div>
                 
-                <div th:if="${success}" class="alert alert-success mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span th:text="${success}">Sucesso</span>
-                </div>
-                
-                <!-- Formulário de Login -->
-                <form th:action="@{/login}" method="post">
+                <!-- Formulário de Registro -->
+                <form th:action="@{/register}" method="post">
                     <div class="form-control mb-4">
                         <label class="label">
                             <span class="label-text font-medium">Usuário</span>
@@ -40,13 +33,31 @@
                         <input 
                             type="text" 
                             name="username" 
-                            placeholder="Digite seu usuário" 
+                            placeholder="Digite seu nome de usuário" 
                             class="input input-bordered w-full" 
                             required 
-                            autofocus />
+                            autofocus
+                            minlength="3"
+                            pattern="[a-zA-Z0-9_]+"
+                            title="Apenas letras, números e underscore" />
+                        <label class="label">
+                            <span class="label-text-alt text-base-content/60">Mínimo 3 caracteres, apenas letras, números e _</span>
+                        </label>
                     </div>
                     
-                    <div class="form-control mb-6">
+                    <div class="form-control mb-4">
+                        <label class="label">
+                            <span class="label-text font-medium">E-mail</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            name="email" 
+                            placeholder="seuemail@exemplo.com" 
+                            class="input input-bordered w-full" 
+                            required />
+                    </div>
+                    
+                    <div class="form-control mb-4">
                         <label class="label">
                             <span class="label-text font-medium">Senha</span>
                         </label>
@@ -55,34 +66,41 @@
                             name="password" 
                             placeholder="Digite sua senha" 
                             class="input input-bordered w-full" 
-                            required />
-                        <!-- <label class="label">
-                            <a href="#" class="label-text-alt link link-hover text-primary">Esqueceu a senha?</a>
-                        </label> -->
+                            required
+                            minlength="6" />
+                        <label class="label">
+                            <span class="label-text-alt text-base-content/60">Mínimo 6 caracteres</span>
+                        </label>
                     </div>
                     
-                    <div class="form-control mb-4">
-                        <label class="label cursor-pointer justify-start gap-3">
-                            <input type="checkbox" name="remember-me" class="checkbox checkbox-primary checkbox-sm" />
-                            <span class="label-text">Lembrar de mim</span>
+                    <div class="form-control mb-6">
+                        <label class="label">
+                            <span class="label-text font-medium">Confirmar Senha</span>
                         </label>
+                        <input 
+                            type="password" 
+                            name="confirmPassword" 
+                            placeholder="Digite sua senha novamente" 
+                            class="input input-bordered w-full" 
+                            required
+                            minlength="6" />
                     </div>
                     
                     <button type="submit" class="btn btn-primary w-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                         </svg>
-                        Entrar
+                        Criar Conta
                     </button>
                 </form>
                 
                 <!-- Divider -->
-                <div th:if="${registrationEnabled}" class="divider text-base-content/40">ou</div>
+                <div class="divider text-base-content/40">ou</div>
                 
-                <!-- Link para registro -->
-                <p th:if="${registrationEnabled}" class="text-center text-base-content/70">
-                    Não tem uma conta? 
-                    <a href="/register" class="link link-primary font-medium">Cadastre-se</a>
+                <!-- Link para login -->
+                <p class="text-center text-base-content/70">
+                    Já tem uma conta? 
+                    <a href="/login" class="link link-primary font-medium">Faça login</a>
                 </p>
                 
                 <!-- Voltar para home -->

@@ -13,6 +13,8 @@ import lombok.Data;
 public class RdlProperties {
 
     private Jwt jwt;
+    
+    private Boolean registrationEnabled = false;
 
     @Data
     public static class Jwt{
