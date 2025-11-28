@@ -5,8 +5,33 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Thymeleaf](https://img.shields.io/badge/Thymeleaf-3-005F0F?style=for-the-badge&logo=thymeleaf&logoColor=white)](https://www.thymeleaf.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
+[![Deploy](https://img.shields.io/badge/Deploy-Automated-brightgreen?style=for-the-badge&logo=github-actions)](https://github.com/bielsolosos/Redirect-Lab/actions)
 
 > **RDL (Redirect Lab)** é um encurtador de URLs moderno construído como um **monolito modular**, projetado para funcionar de forma standalone e também ser facilmente integrado com outras APIs. A aplicação está em construção ativa, porém já se encontra em uma **v1 praticamente estável**.
+
+## 🚀 Deploy Automático
+
+Este projeto possui **GitHub Actions** configurado para deploy automático em VPS usando **Podman Compose** e autenticação por senha SSH.
+
+**📖 [Guia Rápido](.github/QUICK_START.md)** | **📚 [Guia Completo](.github/DEPLOY_SETUP.md)**
+
+### Quick Start - Deploy
+
+```bash
+# 1. Configure as secrets no GitHub (Settings → Secrets):
+#    VPS_HOST, VPS_USER, VPS_PASSWORD, VPS_PROJECT_PATH
+
+# 2. Prepare a VPS:
+ssh root@SEU-IP
+apt install -y git podman python3-pip
+pip3 install podman-compose
+git clone https://github.com/bielsolosos/Redirect-Lab.git
+
+# 3. Faça push para a branch main
+git push origin main
+
+# 4. Deploy automático será iniciado! 🚀
+```
 
 ---
 

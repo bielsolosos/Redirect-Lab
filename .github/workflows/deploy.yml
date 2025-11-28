@@ -1,0 +1,161 @@
+name: Deploy to VPS with Podman
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  DEPLOY_TIMEOUT: 600
+
+jobs:
+  deploy:
+    name: Deploy to VPS
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔐 Install sshpass
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sshpass
+
+      - name: 🔍 Verify SSH Connection
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}
+          VPS_PORT: ${{ secrets.VPS_PORT || '22' }}
+        run: |
+          echo "🔌 Testando conexão SSH..."
+          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no -p $VPS_PORT $VPS_USER@$VPS_HOST "echo '✅ Conexão SSH estabelecida com sucesso!'"
+
+      - name: 🚀 Deploy to VPS
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}
+          VPS_PROJECT_PATH: ${{ secrets.VPS_PROJECT_PATH }}
+          VPS_PORT: ${{ secrets.VPS_PORT || '22' }}
+        run: |
+          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no -p $VPS_PORT $VPS_USER@$VPS_HOST << 'ENDSSH'
+            set -e
+            
+            echo "============================================"
+            echo "🚀 Iniciando Deploy - $(date '+%Y-%m-%d %H:%M:%S')"
+            echo "============================================"
+            
+            # Verificar se o diretório existe
+            if [ ! -d "${{ secrets.VPS_PROJECT_PATH }}" ]; then
+              echo "❌ Erro: Diretório ${{ secrets.VPS_PROJECT_PATH }} não encontrado!"
+              exit 1
+            fi
+            
+            # Navegar para o diretório do projeto
+            cd ${{ secrets.VPS_PROJECT_PATH }}
+            echo "📂 Diretório atual: $(pwd)"
+            
+            # Verificar branch atual
+            CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+            echo "🌿 Branch atual: $CURRENT_BRANCH"
+            
+            # Fazer backup da branch atual (caso precise reverter)
+            BACKUP_COMMIT=$(git rev-parse HEAD)
+            echo "💾 Backup do commit: $BACKUP_COMMIT"
+            
+            echo ""
+            echo "📦 Atualizando código do repositório..."
+            git fetch origin main
+            git pull origin main
+            
+            NEW_COMMIT=$(git rev-parse HEAD)
+            echo "✅ Código atualizado para commit: $NEW_COMMIT"
+            
+            echo ""
+            echo "🛑 Parando containers..."
+            podman compose down || echo "⚠️ Nenhum container estava rodando"
+            
+            echo ""
+            echo "🔨 Fazendo build das imagens..."
+            podman compose build --no-cache
+            
+            echo ""
+            echo "✨ Iniciando containers..."
+            podman compose up -d
+            
+            # Aguardar containers iniciarem
+            echo ""
+            echo "⏳ Aguardando containers iniciarem..."
+            sleep 5
+            
+            # Verificar se containers estão rodando
+            echo ""
+            echo "🔍 Verificando status dos containers..."
+            if podman compose ps | grep -q "Up"; then
+              echo "✅ Containers iniciados com sucesso!"
+            else
+              echo "❌ Erro: Containers não estão rodando!"
+              echo "📋 Logs dos containers:"
+              podman compose logs --tail=50
+              exit 1
+            fi
+            
+            echo ""
+            echo "🧹 Limpando imagens antigas..."
+            podman image prune -f
+            
+            echo ""
+            echo "============================================"
+            echo "✅ Deploy concluído com sucesso!"
+            echo "============================================"
+            echo ""
+            echo "📊 Status final dos containers:"
+            podman compose ps
+            echo ""
+            echo "💻 Informações do sistema:"
+            echo "   - Commit: $NEW_COMMIT"
+            echo "   - Data: $(date '+%Y-%m-%d %H:%M:%S')"
+            echo "   - Usuário: $(whoami)"
+            echo "   - Hostname: $(hostname)"
+          ENDSSH
+
+      - name: 🔍 Health Check
+        if: success()
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}
+          VPS_PORT: ${{ secrets.VPS_PORT || '22' }}
+        run: |
+          echo "🏥 Executando health check..."
+          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no -p $VPS_PORT $VPS_USER@$VPS_HOST << 'ENDSSH'
+            cd ${{ secrets.VPS_PROJECT_PATH }}
+            
+            # Verificar se os containers estão saudáveis
+            RUNNING_CONTAINERS=$(podman compose ps --format json | jq -r '.[].State' | grep -c "running" || echo "0")
+            echo "📊 Containers rodando: $RUNNING_CONTAINERS"
+            
+            if [ "$RUNNING_CONTAINERS" -eq 0 ]; then
+              echo "❌ Nenhum container está rodando!"
+              exit 1
+            fi
+            
+            echo "✅ Health check passou!"
+          ENDSSH
+
+      - name: 📝 Deployment Summary
+        if: always()
+        run: |
+          echo "## 📋 Resumo do Deploy" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Autor**: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Data**: $(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
