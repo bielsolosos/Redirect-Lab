@@ -41,6 +41,13 @@ public class UserService {
         return repository.save(user);
     }
 
+    /**
+     * TODO: Fazer envio e confirmação de email, setar role padrão e outras features mais. 
+     * @param username
+     * @param email
+     * @param password
+     * @return
+     */
     public User createUser(String username, String email, String password){
         if (repository.findByUsername(username).isPresent()) {
             throw new BusinessException("Nome de usuário já está em uso");
