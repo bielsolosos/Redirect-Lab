@@ -17,6 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(redirectLoggingInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/css/**", "/js/**", "/images/**", "/webjars/**", "/favicon.ico");
+                .excludePathPatterns("/css/**", "/js/**", "/images/**", "/webjars/**", 
+                                   "/favicon.ico", "/swagger-ui/**", "/v3/api-docs/**");
     }
 }

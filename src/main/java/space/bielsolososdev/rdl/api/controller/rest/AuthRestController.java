@@ -6,16 +6,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import space.bielsolososdev.rdl.domain.users.model.dto.LoginRequest;
 import space.bielsolososdev.rdl.domain.users.model.dto.RefreshRequest;
 import space.bielsolososdev.rdl.domain.users.model.dto.TokenResponse;
 import space.bielsolososdev.rdl.domain.users.service.AuthService;
 
-/**
- * Controller temporário com a lógica de token toda interna dentro dele. Falta
- * colocar tudo certinho integrando a lógica da service depois.
- */
+@Tag(name = "Autenticação", description = "Endpoints para autenticação e gerenciamento de tokens JWT")
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor

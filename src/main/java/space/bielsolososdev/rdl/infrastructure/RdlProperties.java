@@ -15,6 +15,8 @@ public class RdlProperties {
     private Jwt jwt;
     
     private Boolean registrationEnabled = false;
+    
+    private Boolean swaggerEnabled = true;
 
     @Data
     public static class Jwt{

@@ -27,7 +27,10 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     private static final String[] API_PUBLIC_ROUTES = {
-            "/api/auth/**"
+            "/api/auth/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html"
     };
 
     private static final String[] WEB_PUBLIC_ROUTES = {

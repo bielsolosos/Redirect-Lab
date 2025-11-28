@@ -101,11 +101,13 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        // Não logar requisições de recursos estáticos
+        // Não logar requisições de recursos estáticos e Swagger
         return path.startsWith("/css/") || 
                path.startsWith("/js/") || 
                path.startsWith("/images/") ||
                path.startsWith("/webjars/") ||
-               path.startsWith("/favicon.ico");
+               path.startsWith("/favicon.ico") ||
+               path.startsWith("/swagger-ui") ||
+               path.startsWith("/v3/api-docs");
     }
 }
