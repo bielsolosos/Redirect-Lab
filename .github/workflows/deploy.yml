@@ -53,12 +53,20 @@ jobs:
             
             # Verificar se o diretório existe
             if [ ! -d "$PROJECT_PATH" ]; then
-              echo "❌ Erro: Diretório $PROJECT_PATH não encontrado!"
-              echo "📝 Crie o diretório ou clone o repositório primeiro:"
-              echo "   mkdir -p $(dirname $PROJECT_PATH)"
-              echo "   cd $(dirname $PROJECT_PATH)"
-              echo "   git clone https://github.com/bielsolosos/Redirect-Lab.git"
-              exit 1
+              echo "⚠️ Diretório $PROJECT_PATH não encontrado!"
+              echo "📂 Criando estrutura de diretórios..."
+              mkdir -p "$(dirname "$PROJECT_PATH")"
+              cd "$(dirname "$PROJECT_PATH")"
+              
+              echo "📥 Clonando repositório..."
+              git clone https://github.com/bielsolosos/Redirect-Lab.git
+              
+              if [ ! -d "$PROJECT_PATH" ]; then
+                echo "❌ Erro: Falha ao clonar o repositório!"
+                exit 1
+              fi
+              
+              echo "✅ Repositório clonado com sucesso!"
             fi
             
             # Navegar para o diretório do projeto
