@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import space.bielsolososdev.rdl.core.exception.BusinessException;
 import space.bielsolososdev.rdl.domain.users.model.User;
+import space.bielsolososdev.rdl.domain.users.repository.RoleRepository;
 import space.bielsolososdev.rdl.domain.users.repository.UserRepository;
 
 /**
@@ -21,6 +22,7 @@ import space.bielsolososdev.rdl.domain.users.repository.UserRepository;
 public class UserService {
 
     private final UserRepository repository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     public User getMe() {
@@ -89,6 +91,7 @@ public class UserService {
         entity.setEmail(email);
         entity.setUsername(username);
         entity.setPassword(passwordEncoder.encode(password));
+        entity.getRoles().add(roleRepository.findByName("ROLE_USER").get());
 
         User savedUser = repository.save(entity);
         log.info("✅ Novo usuário criado com sucesso: {} (ID: {})", username, savedUser.getId());

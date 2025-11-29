@@ -8,6 +8,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -128,6 +129,15 @@ public class GlobalExceptionHandler {
 
                 log.warn("Acesso negado para {}: {}", request.getRequestURI(), ex.getMessage());
                 return new MessageResponse("Acesso negado: você não tem permissão para acessar este recurso");
+        }
+
+        @ExceptionHandler(MethodArgumentNotValidException.class)
+        public ResponseEntity<MessageResponse> handleValidationException(MethodArgumentNotValidException ex) {
+                String errorMessage = ex.getBindingResult().getFieldErrors().stream()
+                        .map(error -> error.getDefaultMessage())
+                        .findFirst()
+                        .orElse("Dados inválidos");
+                return ResponseEntity.badRequest().body(new MessageResponse(errorMessage));
         }
 
         /**
