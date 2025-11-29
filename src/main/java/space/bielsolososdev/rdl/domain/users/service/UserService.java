@@ -131,7 +131,7 @@ public class UserService {
         return savedUser;
     }
 
-    private User getEntity(Long id) {
+    public User getEntity(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new BusinessException("Usuário não encontrado no sistema."));
     }

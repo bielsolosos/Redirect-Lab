@@ -111,7 +111,20 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
-                        .permitAll());
+                        .permitAll())
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            // Se for uma requisição HTML (navegador), redireciona para home
+                            String acceptHeader = request.getHeader("Accept");
+                            if (acceptHeader != null && acceptHeader.contains("text/html")) {
+                                response.sendRedirect("/?error=forbidden");
+                            } else {
+                                // Se for API/Ajax, retorna 403
+                                response.setStatus(403);
+                                response.setContentType("application/json");
+                                response.getWriter().write("{\"message\":\"Acesso negado\"}");
+                            }
+                        }));
 
         return http.build();
     }

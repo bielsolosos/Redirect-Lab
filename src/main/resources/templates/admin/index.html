@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" data-theme="winter">
+<head th:replace="~{layout/base :: head('Painel Admin - Redirect Lab')}"></head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <!-- Navbar -->
+    <nav th:replace="~{layout/base :: navbar}"></nav>
+    
+    <!-- Main Content -->
+    <div class="container mx-auto p-4 lg:p-8">
+        
+        <!-- Alertas de Feedback -->
+        <div th:if="${success}" class="alert alert-success shadow-lg mb-6">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span th:text="${success}">Operação realizada com sucesso!</span>
+            </div>
+        </div>
+        
+        <div th:if="${error}" class="alert alert-error shadow-lg mb-6">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span th:text="${error}">Erro ao realizar operação.</span>
+            </div>
+        </div>
+        
+        <!-- Header -->
+        <div class="mb-6">
+            <h1 class="text-4xl font-bold mb-2 flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Painel Administrativo
+            </h1>
+            <p class="text-base-content/70">Gerencie usuários e configurações do sistema</p>
+        </div>
+
+        <!-- Filters Card -->
+        <div class="card bg-base-100 shadow-xl mb-6 border border-base-300">
+            <div class="card-body">
+                <h2 class="card-title text-primary mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                    </svg>
+                    Filtros de Pesquisa
+                </h2>
+                
+                <!-- Form de Filtros - Usa GET para permitir navegação com parâmetros na URL -->
+                <form method="get" action="/admin" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        
+                        <!-- Filtro de Texto: Username ou Email -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">Buscar</span>
+                            </label>
+                            <input type="text" 
+                                   name="filter" 
+                                   th:value="${filter}"
+                                   placeholder="Username ou email" 
+                                   class="input input-bordered w-full" />
+                        </div>
+                        
+                        <!-- Filtro de Status: Ativo/Inativo/Todos -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">Status</span>
+                            </label>
+                            <select name="isActive" class="select select-bordered w-full">
+                                <option value="" th:selected="${isActive == null}">Todos</option>
+                                <option value="true" th:selected="${isActive != null && isActive}">Ativo</option>
+                                <option value="false" th:selected="${isActive != null && !isActive}">Inativo</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Filtro de Data: Criado Após -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">Criado após</span>
+                            </label>
+                            <input type="datetime-local" 
+                                   name="createdAfter" 
+                                   th:value="${createdAfter != null ? #temporals.format(createdAfter, 'yyyy-MM-dd''T''HH:mm') : ''}"
+                                   class="input input-bordered w-full" />
+                        </div>
+                        
+                        <!-- Filtro de Data: Criado Antes -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">Criado antes</span>
+                            </label>
+                            <input type="datetime-local" 
+                                   name="createdBefore" 
+                                   th:value="${createdBefore != null ? #temporals.format(createdBefore, 'yyyy-MM-dd''T''HH:mm') : ''}"
+                                   class="input input-bordered w-full" />
+                        </div>
+                    </div>
+                    
+                    <!-- Botões de Ação -->
+                    <div class="flex gap-2 justify-end">
+                        <a href="/admin" class="btn btn-ghost">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Limpar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            Filtrar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Users Table Card -->
+        <div class="card bg-base-100 shadow-xl border border-base-300">
+            <div class="card-body">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="card-title text-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        Usuários Cadastrados
+                    </h2>
+                    <!-- Badge com total de resultados -->
+                    <span class="badge badge-primary badge-lg" th:text="${users.totalElements + ' usuários'}">0 usuários</span>
+                </div>
+                
+                <!-- Tabela Responsiva com altura máxima e scroll -->
+                <!-- Para ajustar o tamanho: max-height controla altura máxima, min-height controla altura mínima -->
+                <div class="overflow-x-auto" style="max-height: 600px; min-height: 400px; overflow-y: auto;">
+                    <table class="table table-zebra w-full">
+                        <!-- Table Head -->
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Permissões</th>
+                                <th>Criado em</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        
+                        <!-- Table Body -->
+                        <tbody>
+                            <!-- Itera sobre cada usuário da página atual -->
+                            <tr th:each="user : ${users.content}">
+                                <!-- ID do Usuário -->
+                                <td>
+                                    <span class="font-mono text-sm" th:text="${user.id()}">1</span>
+                                </td>
+                                
+                                <!-- Username -->
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <div class="avatar placeholder">
+                                            <div class="bg-primary text-primary-content rounded-full w-8 h-8 flex items-center justify-center">
+                                                <span class="text-xs" th:text="${user.username().substring(0,1).toUpperCase()}">U</span>
+                                            </div>
+                                        </div>
+                                        <span class="font-semibold" th:text="${user.username()}">username</span>
+                                    </div>
+                                </td>
+                                
+                                <!-- Email -->
+                                <td>
+                                    <span class="text-sm" th:text="${user.email()}">email@example.com</span>
+                                </td>
+                                
+                                <!-- Status Badge: Ativo/Inativo -->
+                                <td>
+                                    <span th:if="${user.isActive()}" class="badge badge-success gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Ativo
+                                    </span>
+                                    <span th:unless="${user.isActive()}" class="badge badge-error gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                        Inativo
+                                    </span>
+                                </td>
+                                
+                                <!-- Roles/Permissões -->
+                                <td>
+                                    <div class="flex flex-wrap gap-1">
+                                        <span th:each="role : ${user.roles()}" 
+                                              class="badge badge-primary badge-sm"
+                                              th:text="${role}">
+                                            ROLE
+                                        </span>
+                                    </div>
+                                </td>
+                                
+                                <!-- Data de Criação -->
+                                <td>
+                                    <span class="text-sm" th:text="${#temporals.format(user.createdAt(), 'dd/MM/yyyy HH:mm')}">01/01/2024 10:00</span>
+                                </td>
+                                
+                                <!-- Dropdown de Ações -->
+                                <td class="text-center">
+                                    <div class="dropdown dropdown-end">
+                                        <label tabindex="0" class="btn btn-ghost btn-sm btn-circle">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                                            </svg>
+                                        </label>
+                                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-300">
+                                            <!-- Ação: Editar -->
+                                            <li>
+                                                <a th:data-user-id="${user.id()}" 
+                                                   th:data-username="${user.username()}" 
+                                                   th:data-email="${user.email()}"
+                                                   onclick="openEditModal(this.dataset.userId, this.dataset.username, this.dataset.email)"
+                                                   class="cursor-pointer">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                    </svg>
+                                                    Editar
+                                                </a>
+                                            </li>
+                                            <!-- Ação: Alterar Senha -->
+                                            <li>
+                                                <a th:data-user-id="${user.id()}"
+                                                   th:data-username="${user.username()}"
+                                                   onclick="openPasswordModal(this.dataset.userId, this.dataset.username)"
+                                                   class="cursor-pointer">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1721 9z" />
+                                                    </svg>
+                                                    Alterar Senha
+                                                </a>
+                                            </li>
+                                            <!-- Ação: Ativar/Desativar -->
+                                            <li th:if="${user.isActive()}">
+                                                <a th:data-user-id="${user.id()}"
+                                                   th:data-username="${user.username()}"
+                                                   onclick="openToggleModal(this.dataset.userId, this.dataset.username, false)"
+                                                   class="cursor-pointer">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 715.636 5.636m12.728 12.728L5.636 5.636" />
+                                                    </svg>
+                                                    Desativar
+                                                </a>
+                                            </li>
+                                            <li th:unless="${user.isActive()}">
+                                                <a th:data-user-id="${user.id()}"
+                                                   th:data-username="${user.username()}"
+                                                   onclick="openToggleModal(this.dataset.userId, this.dataset.username, true)"
+                                                   class="cursor-pointer">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    Ativar
+                                                </a>
+                                            </li>
+                                            <div class="divider my-1"></div>
+                                            <!-- Ação: Deletar (crítica) -->
+                                            <li>
+                                                <a th:data-user-id="${user.id()}"
+                                                   th:data-username="${user.username()}"
+                                                   onclick="openDeleteModal(this.dataset.userId, this.dataset.username)"
+                                                   class="text-error cursor-pointer">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                    Deletar
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Mensagem caso não tenha resultados -->
+                <div th:if="${users.content.isEmpty()}" class="alert alert-info mt-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>Nenhum usuário encontrado com os filtros aplicados.</span>
+                </div>
+                
+                <!-- Paginação -->
+                <div th:if="${users.totalPages > 1}" class="flex justify-center mt-6">
+                    <div class="join">
+                        <!-- Botão Primeira Página -->
+                        <a th:href="@{/admin(page=0, size=${users.size}, filter=${filter}, isActive=${isActive}, createdAfter=${createdAfter}, createdBefore=${createdBefore})}" 
+                           th:classappend="${users.first} ? 'btn-disabled' : ''"
+                           class="join-item btn btn-sm">
+                            «
+                        </a>
+                        
+                        <!-- Botão Página Anterior -->
+                        <a th:href="@{/admin(page=${users.number - 1}, size=${users.size}, filter=${filter}, isActive=${isActive}, createdAfter=${createdAfter}, createdBefore=${createdBefore})}" 
+                           th:classappend="${users.first} ? 'btn-disabled' : ''"
+                           class="join-item btn btn-sm">
+                            ‹
+                        </a>
+                        
+                        <!-- Indicador de Página Atual -->
+                        <button class="join-item btn btn-sm btn-active" th:text="'Página ' + ${users.number + 1} + ' de ' + ${users.totalPages}">
+                            Página 1 de 5
+                        </button>
+                        
+                        <!-- Botão Próxima Página -->
+                        <a th:href="@{/admin(page=${users.number + 1}, size=${users.size}, filter=${filter}, isActive=${isActive}, createdAfter=${createdAfter}, createdBefore=${createdBefore})}" 
+                           th:classappend="${users.last} ? 'btn-disabled' : ''" 
+                           class="join-item btn btn-sm">
+                            ›
+                        </a>
+                        
+                        <!-- Botão Última Página -->
+                        <a th:href="@{/admin(page=${users.totalPages - 1}, size=${users.size}, filter=${filter}, isActive=${isActive}, createdAfter=${createdAfter}, createdBefore=${createdBefore})}" 
+                           th:classappend="${users.last} ? 'btn-disabled' : ''"
+                           class="join-item btn btn-sm">
+                            »
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Editar Usuário -->
+    <dialog id="edit-modal" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Editar Usuário
+            </h3>
+            
+            <form id="edit-form" method="post" class="space-y-4">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-medium">Username</span>
+                    </label>
+                    <input type="text" id="edit-username" name="username" required class="input input-bordered w-full" />
+                </div>
+                
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-medium">Email</span>
+                    </label>
+                    <input type="email" id="edit-email" name="email" required class="input input-bordered w-full" />
+                </div>
+                
+                <div class="modal-action">
+                    <button type="submit" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        Salvar
+                    </button>
+                    <button type="button" onclick="document.getElementById('edit-modal').close()" class="btn btn-ghost">Cancelar</button>
+                </div>
+            </form>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <!-- Modal: Alterar Senha -->
+    <dialog id="password-modal" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-info" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1721 9z" />
+                </svg>
+                Alterar Senha de <span id="password-username-display" class="text-primary"></span>
+            </h3>
+            
+            <form id="password-form" method="post" class="space-y-4">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                
+                <div class="alert alert-info">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>Como administrador, você pode redefinir a senha sem validação.</span>
+                </div>
+                
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-medium">Nova Senha</span>
+                    </label>
+                    <input type="password" name="newPassword" required minlength="6" class="input input-bordered w-full" placeholder="Mínimo 6 caracteres" />
+                </div>
+                
+                <div class="modal-action">
+                    <button type="submit" class="btn btn-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        Alterar Senha
+                    </button>
+                    <button type="button" onclick="document.getElementById('password-modal').close()" class="btn btn-ghost">Cancelar</button>
+                </div>
+            </form>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <!-- Modal: Ativar/Desativar Usuário -->
+    <dialog id="toggle-modal" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" id="toggle-icon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span id="toggle-action-text">Ativar</span> Usuário
+            </h3>
+            
+            <div class="alert" id="toggle-alert">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>
+                    Tem certeza que deseja <span id="toggle-action-text-2"></span> o usuário <strong id="toggle-username-display"></strong>?
+                </span>
+            </div>
+            
+            <form id="toggle-form" method="post" class="mt-4">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                
+                <div class="modal-action">
+                    <button type="submit" class="btn" id="toggle-submit-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        Confirmar
+                    </button>
+                    <button type="button" onclick="document.getElementById('toggle-modal').close()" class="btn btn-ghost">Cancelar</button>
+                </div>
+            </form>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <!-- Modal: Deletar Usuário -->
+    <dialog id="delete-modal" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="font-bold text-lg mb-4 flex items-center gap-2 text-error">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                Deletar Usuário
+            </h3>
+            
+            <div class="alert alert-error">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                    <h3 class="font-bold">Atenção! Esta ação é irreversível.</h3>
+                    <div class="text-xs">Tem certeza que deseja deletar permanentemente o usuário <strong id="delete-username-display"></strong>?</div>
+                </div>
+            </div>
+            
+            <form id="delete-form" method="post" class="mt-4">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                
+                <div class="modal-action">
+                    <button type="submit" class="btn btn-error">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Deletar Permanentemente
+                    </button>
+                    <button type="button" onclick="document.getElementById('delete-modal').close()" class="btn btn-ghost">Cancelar</button>
+                </div>
+            </form>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <!-- Scripts para controle dos modais -->
+    <script th:inline="javascript">
+        function openEditModal(userId, username, email) {
+            const form = document.getElementById('edit-form');
+            form.action = `/admin/users/${userId}/edit`;
+            document.getElementById('edit-username').value = username;
+            document.getElementById('edit-email').value = email;
+            document.getElementById('edit-modal').showModal();
+        }
+
+        function openPasswordModal(userId, username) {
+            const form = document.getElementById('password-form');
+            form.action = `/admin/users/${userId}/change-password`;
+            document.getElementById('password-username-display').textContent = username;
+            document.getElementById('password-modal').showModal();
+        }
+
+        function openToggleModal(userId, username, isActivating) {
+            const form = document.getElementById('toggle-form');
+            form.action = `/admin/users/${userId}/toggle-active`;
+            document.getElementById('toggle-username-display').textContent = username;
+            
+            const icon = document.getElementById('toggle-icon');
+            const actionText = document.getElementById('toggle-action-text');
+            const actionText2 = document.getElementById('toggle-action-text-2');
+            const submitBtn = document.getElementById('toggle-submit-btn');
+            const alert = document.getElementById('toggle-alert');
+            
+            if (isActivating) {
+                icon.className = 'h-6 w-6 text-success';
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />';
+                actionText.textContent = 'Ativar';
+                actionText2.textContent = 'ativar';
+                submitBtn.className = 'btn btn-success';
+                alert.className = 'alert alert-success';
+            } else {
+                icon.className = 'h-6 w-6 text-warning';
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />';
+                actionText.textContent = 'Desativar';
+                actionText2.textContent = 'desativar';
+                submitBtn.className = 'btn btn-warning';
+                alert.className = 'alert alert-warning';
+            }
+            
+            document.getElementById('toggle-modal').showModal();
+        }
+
+        function openDeleteModal(userId, username) {
+            const form = document.getElementById('delete-form');
+            form.action = `/admin/users/${userId}/delete`;
+            document.getElementById('delete-username-display').textContent = username;
+            document.getElementById('delete-modal').showModal();
+        }
+    </script>
+</body>
+</html>
