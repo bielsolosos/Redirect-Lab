@@ -40,9 +40,4 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("me")
-    public ResponseEntity<UserResponse> getMe() {
-        return ResponseEntity.ok(UserMapper.toUserResponse(userService.getMe()));
-    }
-
 }
