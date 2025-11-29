@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
+import space.bielsolososdev.rdl.api.mapper.UserMapper;
 import space.bielsolososdev.rdl.core.exception.BusinessException;
-import space.bielsolososdev.rdl.domain.users.model.User;
 import space.bielsolososdev.rdl.domain.users.service.UserService;
 
 @Controller
@@ -22,8 +22,7 @@ public class ProfileController {
 
     @GetMapping
     public String profile(Model model) {
-        User user = userService.getMe();
-        model.addAttribute("user", user);
+        model.addAttribute("user", UserMapper.toUserResponse(userService.getMe()));
         return "profile/index";
     }
 
@@ -47,8 +46,7 @@ public class ProfileController {
         }
 
         try {
-            User user = userService.getMe();
-            userService.changePassword(user.getId(), currentPassword, newPassword);
+            userService.changePassword(userService.getMe().getId(), currentPassword, newPassword);
             redirectAttributes.addFlashAttribute("success", "Senha alterada com sucesso!");
         } catch (BusinessException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
