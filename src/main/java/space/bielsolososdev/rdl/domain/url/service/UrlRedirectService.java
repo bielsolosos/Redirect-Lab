@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ public class UrlRedirectService {
 
     private final UrlRedirectRepository repository;
 
+    @Cacheable(value = "urls", key = "#slug")
     public UrlRedirect findBySlug(String slug) {
         Optional<UrlRedirect> entity = repository.findBySlug(slug);
 
@@ -31,12 +34,15 @@ public class UrlRedirectService {
         return entity.get();
     }
 
+    @CacheEvict(value = "urls", key = "#entity.slug")
     public UrlRedirect create(UrlRedirect entity) {
         entity.setCreatedAt(LocalDateTime.now());
 
-        if(repository.findBySlug(entity.getSlug()).isPresent()) throw new BusinessException("Já existe um redirect com esse slug.");
+        if (repository.findBySlug(entity.getSlug()).isPresent())
+            throw new BusinessException("Já existe um redirect com esse slug.");
 
-        if(repository.findByUrl(entity.getUrl()).isPresent()) throw new BusinessException("Já existe um redirect com esse url.");
+        if (repository.findByUrl(entity.getUrl()).isPresent())
+            throw new BusinessException("Já existe um redirect com esse url.");
 
         return repository.save(entity);
     }
@@ -45,6 +51,7 @@ public class UrlRedirectService {
         return repository.findAll();
     }
 
+    @CacheEvict(value = "urls", allEntries = true)
     public UrlRedirect update(Long id, UrlRedirect updatedEntity) {
         UrlRedirect existingEntity = repository.findById(id)
                 .orElseThrow(() -> new BusinessException("Redirect não encontrado"));
@@ -71,6 +78,7 @@ public class UrlRedirectService {
         return repository.save(existingEntity);
     }
 
+    @CacheEvict(value = "urls", allEntries = true)
     public void delete(Long id) {
         if (!repository.existsById(id)) {
             throw new BusinessException("Redirect não encontrado");
@@ -78,6 +86,7 @@ public class UrlRedirectService {
         repository.deleteById(id);
     }
 
+    @CacheEvict(value = "urls", allEntries = true)
     public UrlRedirect toggleEnabled(Long id) {
         UrlRedirect entity = repository.findById(id)
                 .orElseThrow(() -> new BusinessException("Redirect não encontrado"));

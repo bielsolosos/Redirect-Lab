@@ -1,6 +1,8 @@
 spring:
   thymeleaf:
     cache: false
+  cache:
+    type: none
 
 rdl:
   swagger-enabled: true
