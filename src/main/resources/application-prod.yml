@@ -17,11 +17,11 @@ spring:
           max-wait: -1ms
 
 rdl:
-  swagger-enabled: false
+  swagger-enabled: true #TODO TIRAR dps
 
 springdoc:
   swagger-ui:
-    enabled: false
+    enabled: true #TODO TIRAR dps
 
 logging:
   file:
