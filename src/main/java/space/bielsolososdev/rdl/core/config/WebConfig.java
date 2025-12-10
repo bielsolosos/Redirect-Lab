@@ -1,6 +1,7 @@
 package space.bielsolososdev.rdl.core.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -19,5 +20,15 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns("/css/**", "/js/**", "/images/**", "/webjars/**", 
                                    "/favicon.ico", "/swagger-ui/**", "/v3/api-docs/**");
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOriginPatterns("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+                .maxAge(3600);
     }
 }
