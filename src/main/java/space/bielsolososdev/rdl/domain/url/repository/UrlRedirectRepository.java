@@ -2,9 +2,11 @@ package space.bielsolososdev.rdl.domain.url.repository;
 
 import java.util.Optional;
 
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import org.springframework.data.jpa.repository.Query;
 import space.bielsolososdev.rdl.domain.url.model.UrlRedirect;
 
 public interface UrlRedirectRepository extends JpaRepository<UrlRedirect, Long>, JpaSpecificationExecutor<UrlRedirect> {
@@ -22,7 +24,8 @@ public interface UrlRedirectRepository extends JpaRepository<UrlRedirect, Long>,
     /**
      * Busca uma URL pelo url (independente se está habilitada)
      */
-    Optional<UrlRedirect> findByUrl(String url);
+    @Query("SELECT u FROM UrlRedirect u JOIN FETCH u.user WHERE u.slug = :slug")
+    Optional<UrlRedirect> findBySlugWithUser(@Param("slug") String slug);
     
     /**
      * Verifica se existe um slug

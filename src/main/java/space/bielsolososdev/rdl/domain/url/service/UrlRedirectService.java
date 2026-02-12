@@ -53,13 +53,13 @@ public class UrlRedirectService {
             throw new BusinessException("Já existe um redirect com esse slug.");
         }
 
-        if (repository.findByUrl(entity.getUrl()).isPresent()) {
+        if (repository.findBySlugWithUser(entity.getUrl()).isPresent()) {
             log.warn("Tentativa de criar redirect com URL já existente: {}", entity.getUrl());
             throw new BusinessException("Já existe um redirect com esse url.");
         }
 
         UrlRedirect savedEntity = repository.save(entity);
-        log.info("✅ Redirect criado com sucesso: slug='{}' -> '{}' (User: {})", 
+        log.info("Redirect criado com sucesso: slug='{}' -> '{}' (User: {})",
                 savedEntity.getSlug(), savedEntity.getUrl(), user.getUsername());
 
         return savedEntity;
@@ -116,7 +116,7 @@ public class UrlRedirectService {
                     }
                 });
 
-        repository.findByUrl(updatedEntity.getUrl())
+        repository.findBySlugWithUser(updatedEntity.getUrl())
                 .ifPresent(entity -> {
                     if (!entity.getId().equals(id)) {
                         throw new BusinessException("Já existe um redirect com esse url.");

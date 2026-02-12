@@ -1,5 +1,6 @@
 package space.bielsolososdev.rdl.api.controller.rest;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import space.bielsolososdev.rdl.api.mapper.UrlRedirectMapper;
 import space.bielsolososdev.rdl.api.model.urlredirect.UrlRedirectResponse;
 import space.bielsolososdev.rdl.core.exception.BusinessException;
 import space.bielsolososdev.rdl.core.exception.RedirectException;
+import space.bielsolososdev.rdl.domain.url.service.UrlRedirectAsyncService;
 import space.bielsolososdev.rdl.domain.url.service.UrlRedirectService;
 @Tag(name = "Url Redirect")
 @RestController
@@ -20,11 +22,13 @@ import space.bielsolososdev.rdl.domain.url.service.UrlRedirectService;
 public class UrlRedirectController {
 
     private final UrlRedirectService service;
+    private final UrlRedirectAsyncService asyncService;
 
     @GetMapping("/{slug}")
-    public void redirect(@PathVariable String slug, HttpServletResponse response) throws Exception {
+    public void redirect(@PathVariable String slug, HttpServletResponse response, HttpServletRequest request) throws Exception {
         try {
             UrlRedirectResponse urlRedirect = UrlRedirectMapper.toUrlRedirectResponse(service.findBySlug(slug));
+            asyncService.processStatisticsForRedirect(urlRedirect, request);
             response.sendRedirect(urlRedirect.url());
         } catch (BusinessException exception) {
             throw new RedirectException(exception.getMessage(), slug);

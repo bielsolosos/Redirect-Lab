@@ -13,6 +13,8 @@ import lombok.Data;
 public class RdlProperties {
 
     private Jwt jwt;
+
+    private AsyncExecutor asyncExecutor;
     
     private Boolean registrationEnabled = false;
     
@@ -26,5 +28,15 @@ public class RdlProperties {
         private Long expiration;
         
         private Long refreshExpiration;
+    }
+
+    @Data
+    public static class AsyncExecutor{
+
+        private Integer corePoolSize;
+
+        private Integer maxPoolSize;
+
+        private Integer queueCapacity;
     }
 }

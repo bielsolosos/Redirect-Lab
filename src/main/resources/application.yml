@@ -45,6 +45,10 @@ rdl:
     expiration: ${JWT_EXPIRATION:3600000}
     refresh-expiration: ${JWT_REFRESH_EXPIRATION:86400000}
   registration-enabled: ${REGISTRATION_ENABLED:false}
+  async-executor:
+    core-pool-size: ${ASYNC_EXECUTOR_EXPIRATION:5}
+    max-pool-size: ${ASYNC_EXECUTOR_MAX_POOL_SIZE:10}
+    queue-capacity: ${ASYNC_EXECUTOR_QUEUE_CAPACITY:100}
 
 logging:
   level:

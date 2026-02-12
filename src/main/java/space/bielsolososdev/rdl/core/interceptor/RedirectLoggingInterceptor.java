@@ -26,7 +26,7 @@ public class RedirectLoggingInterceptor implements HandlerInterceptor {
             
             String redirectType = getRedirectType(status);
             
-            log.info("🔀 REDIRECT [{}] {} | De: {} | Para: {} | IP: {}", 
+            log.info("REDIRECT [{}] {} | De: {} | Para: {} | IP: {}",
                     status,
                     redirectType,
                     uri,

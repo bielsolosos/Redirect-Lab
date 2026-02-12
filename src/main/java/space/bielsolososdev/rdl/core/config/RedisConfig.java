@@ -51,7 +51,7 @@ public class RedisConfig {
             JsonTypeInfo.As.PROPERTY
         );
         
-        log.info("✅ ObjectMapper para Redis configurado com suporte para Java 8 Date/Time");
+        log.info("ObjectMapper para Redis configurado com suporte para Java 8 Date/Time");
         return objectMapper;
     }
 
@@ -90,7 +90,7 @@ public class RedisConfig {
      */
     @Bean
     CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
-        log.info("🔧 Configurando CacheManager com Redis");
+        log.info("Configurando CacheManager com Redis");
         
         ObjectMapper redisMapper = createRedisObjectMapper();
         
